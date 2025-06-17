@@ -1,5 +1,4 @@
-﻿#include <QApplication>
-#include <QImage>
+﻿#include <QImage>
 #include <QPainter>
 #include <QFontDatabase>
 #include <QRawFont>
@@ -8,8 +7,6 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-
     // 加载字体
     QFont font("微软雅黑", 20);
     QRawFont rawFont = QRawFont::fromFont(font);
