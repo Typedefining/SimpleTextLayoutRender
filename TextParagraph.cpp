@@ -42,7 +42,7 @@ ParagraphLayout layoutParagraph(const TextParagraph& paragraph, int maxWidth)
 
 			for (int i = 0; i < glyphs.size(); ++i) {
 				quint32 glyphIndex = glyphs[i];
-				qreal advance = run.font.advancesForGlyphIndexes({ glyphIndex }).last().x() + run.letterSpacing;
+				qreal advance = advances[i].x() + run.letterSpacing;
 				if (x + advance > maxWidth && !currentLine.isEmpty()) {
 					finalizeLine();
 				}

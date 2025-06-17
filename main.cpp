@@ -43,11 +43,11 @@ int main(int argc, char *argv[])
     TextRun run2;
     run2.text = "Centered paragraph with stroke and shadow.";
     run2.font = rawFont;
-    run2.fillColor = Qt::white;
-    run2.strokeColor = Qt::blue;
+    run2.fillColor = Qt::blue;
+    //run2.strokeColor = Qt::blue;
     run2.strokeWidth = 1.5;
     run2.textShadowOffset = QPointF(2, 2);
-    run2.textShadowColor = Qt::gray;
+    run2.textShadowColor = Qt::red;
     para2.runs.append(run2);
     paragraphs.append(para2);
 
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     para3.align = AlignRight;
 
     TextRun run3;
-    run3.text = "Right-aligned text with background and strikethrough.";
+    run3.text = "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈";
     run3.font = rawFont;
     run3.fillColor = Qt::darkGreen;
     run3.backgroundColor = QColor(255, 255, 0, 160);
