@@ -71,10 +71,17 @@ std::vector<GlyphInfo> Font::shapeText(const std::wstring& text, float letterSpa
         auto shaped = shapeWord(word, letterSpacing);
         for (auto& g : shaped.glyphs) {
             g.posX += x;
+			//ToDo:缓存Y
+            g.posY = 50;
             result.push_back(g);
         }
         x += shaped.totalAdvance + letterSpacing;
     }
 
     return result;
+}
+
+FT_Face Font::getFontFace()
+{
+	return m_face;
 }

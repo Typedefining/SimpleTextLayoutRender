@@ -17,6 +17,7 @@ public:
     float height() const;
 
     std::vector<GlyphInfo> shapeText(const std::wstring& text, float letterSpacing = 0.0f, bool keepWords = true) const;
+	FT_Face getFontFace();
 
 private:
     FT_Face m_face = nullptr;

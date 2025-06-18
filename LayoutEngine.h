@@ -2,9 +2,13 @@
 #include "TextParagraph.h"
 #include "GlyphInfo.h"
 #include <vector>
+#include "Font.h"
+#include <memory>
+
 
 struct PositionedGlyph {
     GlyphInfo glyph;
+    std::shared_ptr<Font> font;
     float baselineY;
 };
 

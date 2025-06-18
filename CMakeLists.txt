@@ -27,6 +27,9 @@ if(MSVC)
 endif ()
 
 set(SRC
+	FreeTypeFontMetrics.h
+	FreeTypeFontMetrics.cpp
+
 	TextRun.h
 	TextParagraph.h
 
@@ -37,6 +40,11 @@ set(SRC
 
 	LayoutEngine.h
 	LayoutEngine.cpp
+
+	Color.h
+	PaintDevice.h
+	PaintEngine.h
+	stb_image_write.h
 
 	main.cpp
 )

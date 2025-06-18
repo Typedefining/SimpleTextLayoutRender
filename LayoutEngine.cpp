@@ -9,13 +9,13 @@ ParagraphLayout LayoutEngine::layout(const TextParagraph& paragraph) {
     float y = 0;
 
     for (const auto& run : paragraph.runs) {
-        Font font(run.fontFilePath, run.fontSize);
-        if (!font.isValid()) continue;
+        auto font = std::make_shared<Font>(run.fontFilePath, run.fontSize);
+        if (!font->isValid()) continue;
 
-        auto glyphs = font.shapeText(run.text, run.letterSpacing, true);
+        auto glyphs = font->shapeText(run.text, run.letterSpacing, true);
         std::vector<PositionedGlyph> line;
         float x = paragraph.indent;
-        float lineHeight = font.height();
+        float lineHeight = font->height();
 
         for (const auto& g : glyphs) {
             if (x + g.advanceX > m_maxWidth && !line.empty()) {
@@ -25,7 +25,7 @@ ParagraphLayout LayoutEngine::layout(const TextParagraph& paragraph) {
                 x = paragraph.indent;
             }
 
-            line.push_back({ g, y + font.ascent() });
+            line.emplace_back(g, font, y + font->ascent());
             x += g.advanceX + run.letterSpacing;
         }
 
