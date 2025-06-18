@@ -2,3 +2,6 @@
 release/**
 
 build/**
+
+
+.vscode/**

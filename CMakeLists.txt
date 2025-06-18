@@ -27,11 +27,16 @@ if(MSVC)
 endif ()
 
 set(SRC
-	TextParagraph.cpp
+	TextRun.h
 	TextParagraph.h
 
-	FreeTypeFontMetrics.cpp
-	FreeTypeFontMetrics.h
+	Font.h
+	Font.cpp
+
+	GlyphInfo.h
+
+	LayoutEngine.h
+	LayoutEngine.cpp
 
 	main.cpp
 )
@@ -39,40 +44,13 @@ set(SRC
 # include路径前缀
 include_directories(${PROJECT_SOURCE_DIR})
 
-# 收集依赖的qt库
-set(QT_LIB
-	Core
-	Widgets
-	Gui
-)
-
-find_package(Qt5 COMPONENTS REQUIRED
-${QT_LIB}
-)
-
 find_package(Freetype REQUIRED)
 
 include_directories(${FREETYPE_INCLUDE_DIRS})
-
-# 组合连接时的名字
-list(TRANSFORM QT_LIB PREPEND "Qt5::" OUTPUT_VARIABLE QT_LIB_LINK)
-
-foreach(item ${QT_LIB_LINK})
-	get_target_property(LibLocation ${item} LOCATION)
-	get_filename_component(LibDir ${LibLocation} DIRECTORY)
-	list(APPEND LIB_LOCATION ${LibLocation})
-endforeach()
-
-message(${LibDir})
-message(${LIB_LOCATION})
 
 message(FREETYPE_LIBRARIES ${FREETYPE_LIBRARIES})
 message(FREETYPE_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIRS})
 
 add_executable(${PROJECT_NAME} ${SRC})
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_LIB_LINK} ${FREETYPE_LIBRARIES})
-
-set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
-	WIN32_EXECUTABLE ON
-)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${FREETYPE_LIBRARIES})
