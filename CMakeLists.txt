@@ -33,15 +33,14 @@ set(SRC
 	TextRun.h
 	TextParagraph.h
 
-	Font.h
-	Font.cpp
-
 	GlyphInfo.h
 
 	LayoutEngine.h
 	LayoutEngine.cpp
 
 	Color.h
+
+	PaintDevice.cpp
 	PaintDevice.h
 	PaintEngine.h
 	stb_image_write.h

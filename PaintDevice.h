@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
 
 #include <vector>
 #include <string>
@@ -36,10 +34,7 @@ public:
         return m_pixels[y * m_width + x];
     }
 
-    void saveToPNG(const std::string& filename) const {
-        stbi_write_png(filename.c_str(), m_width, m_height, 4, m_pixels.data(), m_width * 4);
-    }
-
+    void saveToPNG(const std::string& filename) const;
 private:
     int m_width, m_height;
     std::vector<uint32_t> m_pixels;

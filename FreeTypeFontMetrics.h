@@ -6,38 +6,77 @@
 #include <vector>
 #include <unordered_map>
 #include <cstdint>
+#include "TextRun.h"
+
+class PaintEngine;
+class IFontMetricsProvider;
+struct GlyphInfo;
+struct PositionedGlyph;
+
 
 struct RectF {
     double x, y, width, height;
 };
 
-class FontMetricsProvider {
+class IFontMetricsProvider {
 public:
-    virtual ~FontMetricsProvider() = default;
-    virtual std::vector<uint32_t> getGlyphIndices(const std::string& text) const = 0;
-    virtual std::vector<double> getAdvances(const std::vector<uint32_t>& glyphIndices) const = 0;
-    virtual double ascent() const = 0;
-    virtual double descent() const = 0;
-    virtual RectF boundingRect(uint32_t glyphIndex) const = 0;
+    virtual ~IFontMetricsProvider() = default;
+    virtual std::vector<uint32_t> getGlyphIndices(const std::wstring& text) = 0;
+    virtual std::vector<std::pair<double, double>> getAdvances(const std::vector<uint32_t>& glyphIndices) = 0;
+    virtual double ascent() = 0;
+    virtual double descent() = 0;
+    virtual RectF boundingRect(uint32_t glyphIndex) = 0;
 };
 
-class FreeTypeFontMetrics : public FontMetricsProvider {
+struct FontFace : public IFontMetricsProvider {
+	std::string path;
+	FT_Face face = nullptr;
+	float fontSize = 12.0f;
+	float letterSpacing = 12.0f;
+	float lineSpacing = 12.0f;
+
+	FontFace(const std::string& fontPath, FT_Face ftFace);
+
+	virtual ~FontFace();
+
+	void setSize(float pixelSize) {
+		fontSize = pixelSize;
+	}
+	void setLetterSpacing(float pixelSize) {
+		letterSpacing = pixelSize;
+	}
+	void setLineSpacing(float pixelSize) {
+		lineSpacing = pixelSize;
+	}
+
+	void drawFace(PaintEngine* paint, const PositionedGlyph& info);
+	virtual std::vector<uint32_t> getGlyphIndices(const std::wstring& text) override;
+    virtual std::vector<std::pair<double, double>> getAdvances(const std::vector<uint32_t>& glyphIndices) override;
+    virtual double ascent() override;
+    virtual double descent() override;
+    virtual RectF boundingRect(uint32_t glyphIndex) override;
+};
+
+
+class FreeTypeFontMetrics {
+    FreeTypeFontMetrics();
 public:
-    FreeTypeFontMetrics(const std::string& fontPath, int pixelSize);
     ~FreeTypeFontMetrics();
 
-    std::vector<uint32_t> getGlyphIndices(const std::string& text) const override;
-    std::vector<double> getAdvances(const std::vector<uint32_t>& glyphIndices) const override;
-    double ascent() const override;
-    double descent() const override;
-    RectF boundingRect(uint32_t glyphIndex) const override;
+	static FreeTypeFontMetrics& instance() {
+		static FreeTypeFontMetrics instance;
+		return instance;
+	}
+
+	uint32_t addFace(const std::string& fontPath);
+	FontFace getFace(uint32_t fontId);
+	uint32_t getFontId(const FontFace& font);
 
 private:
     FT_Library m_ftLibrary = nullptr;
-    FT_Face m_face = nullptr;
+    std::vector<FontFace> m_fontFaces;
     int m_pixelSize = 0;
 
     mutable std::unordered_map<uint32_t, FT_Glyph_Metrics> m_metricsCache;
 
-    void loadGlyph(uint32_t glyphIndex) const;
 };

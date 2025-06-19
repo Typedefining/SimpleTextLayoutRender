@@ -5,7 +5,7 @@
 #include "Color.h"
 #include "PaintDevice.h"
 #include "LayoutEngine.h"
-#include "Font.h"
+#include "FreeTypeFontMetrics.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -18,33 +18,10 @@ public:
 
 	void drawLayout(int x, int y, ParagraphLayout& layout, const Color& color)
 	{
+		auto& ffonts = FreeTypeFontMetrics::instance();
 		for (auto& line : layout.lines) {
 			for (auto& positioned : line) {
-				const auto& glyphInfo = positioned.glyph;
-				auto& font = positioned.font;
-
-				auto face = font->getFontFace();
-				if (!face) continue;
-
-				if (FT_Load_Glyph(face, glyphInfo.glyphIndex, FT_LOAD_RENDER)) continue;
-				FT_GlyphSlot g = face->glyph;
-				int originX = static_cast<int>(x) + g->bitmap_left;
-				int originY = static_cast<int>(y) - g->bitmap_top;
-
-
-				for (int row = 0; row < g->bitmap.rows; ++row) {
-					for (int col = 0; col < g->bitmap.width; ++col) {
-						uint8_t alpha = g->bitmap.buffer[row * g->bitmap.pitch + col];
-						if (alpha == 0) continue;
-
-						int px = g->bitmap_left + col + glyphInfo.posX;
-						int py = glyphInfo.posY - g->bitmap_top + row;
-
-						Color blended = color;
-						blended.a = (alpha * color.a) / 255;
-						blendPixel(px, py, blended);
-					}
-				}
+				ffonts.getFace(positioned.fontId).drawFace(this, positioned);
 			}
 		}
 	}
